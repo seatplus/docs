@@ -21,6 +21,7 @@ docker-compose exec php composer require vendor/package
 anyway most often you need to run migrations or publish assets afterwards so it might be worthwhile to directly enter
 the container (see below). If a new UI will be introduced by the package don't forget to restart the node container
 after the publishing of the packages asset. 
+
 ```shell
 docker-compose restart node
 ```

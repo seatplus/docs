@@ -47,7 +47,7 @@ const navigation = [
     {
         title: 'Plugins',
         links: [
-            { title: 'Ship Replacement Programm', href: '/docs/how-to-contribute' },
+            { title: 'Ship Replacement Programm', href: '/docs/plugins/srp' },
         ],
     },
   {
