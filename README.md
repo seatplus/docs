@@ -1,6 +1,6 @@
-# Syntax
+# Seatplus
 
-Syntax is a [Tailwind UI](https://tailwindui.com) site template built using [Tailwind CSS](https://tailwindcss.com) and [Next.js](https://nextjs.org).
+This is the seatplus documentation. It is based on a [Tailwind UI](https://tailwindui.com) site template built using [Tailwind CSS](https://tailwindcss.com) and [Next.js](https://nextjs.org).
 
 ## Getting started
 
@@ -25,7 +25,7 @@ You can start editing this template by modifying the files in the `/src` folder.
 
 ## License
 
-This site template is a commercial product and is licensed under the [Tailwind UI license](https://tailwindui.com/license).
+This project is licensed under the MIT License.
 
 ## Learn more
 
