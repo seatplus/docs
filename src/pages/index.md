@@ -8,13 +8,13 @@ Learn how to set up Seatplus in under thirty minutes.  {% .lead %}
 
 {% quick-links %}
 
-{% quick-link title="Installation" icon="installation" href="/installation" description="Step-by-step guides to setting up your system and installing Seatplus." /%}
+{% quick-link title="Installation" icon="installation" href="/docs/installation" description="Step-by-step guides to setting up your system and installing Seatplus." /%}
 
-{% quick-link title="Features" icon="presets" href="/" description="Learn what Seatplus offers to you and how it works." /%}
+{% quick-link title="Features" icon="presets" href="/docs/ssoScopes" description="Learn what Seatplus offers to you and how it works." /%}
 
-{% quick-link title="Plugins" icon="plugins" href="/" description="Extend the application with third-party plugins or write your own." /%}
+{% quick-link title="Plugins" icon="plugins" href="/docs/plugins/srp" description="Extend the application with third-party plugins or write your own." /%}
 
-{% quick-link title="Contribution" icon="theming" href="/" description="Learn to easily customize and modify your app's visual design to fit your brand." /%}
+{% quick-link title="Contribution" icon="theming" href="/docs/how-to-contribute" description="Learn to easily customize and modify your app's visual design to fit your brand." /%}
 
 {% /quick-links %}
 
