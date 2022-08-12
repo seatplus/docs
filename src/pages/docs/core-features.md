@@ -1,1 +1,0 @@
-{% figure src="/img.png" alt="test" /%}
