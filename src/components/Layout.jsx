@@ -53,7 +53,9 @@ const navigation = [
   {
     title: 'Contributing',
     links: [
-      { title: 'How to contribute', href: '/docs/how-to-contribute' },
+      { title: 'How to contribute', href: '/docs/contributing/how-to-contribute' },
+      { title: 'Dev Environment', href: '/docs/contributing/installation' },
+      { title: 'Package Development', href: '/docs/contributing/packages' },
     ],
   },
 ]

@@ -63,13 +63,27 @@ If you have traefik already installed on your server or plan to use it, you migh
     docker-compose -f traefik/docker-compose.yml -f traefik/docker-compose.prod.yml up -d
     ```
 
-## Configure your app
+## Bootstrap your app
 We provided the base-app with a bootstrap shell script. Simply run it and enter the required information:
 ```shell
 bash bootstraph.sh
 ```
+
 Please refer to {% link href="configuration" %}Configuration{% /link %} in order to get more information of the available settings.
 
+## Prepare source files
+
+Seatplus requires the `/src` directory to be present. This directory contains the source code of the app.
+Run the following command to create the application in the `/src` directory:
+
+```shell
+docker-compose run --rm php composer create-project seatplus/core . --prefer-dist --no-dev --no-ansi
+```
+
+{% callout type="warning" title="File ownership" %}
+if you use linux you might need to change the file ownership of the `/src` directory to the user that is running the docker-compose command.
+by default the files will be owned by root.
+{% /callout %}
 
 ## Start the App
 to start the app simply run
