@@ -10,8 +10,8 @@ same environment as the developers and allows for better support in any
 case.
 
 {% callout type="note" title="Traefik" %}
-seatplus ships with traefik as a forward proxy server. If you wish to configure your own nginx or apache server you are
-on yourself. If you have already traefik in use you may need to alter the external docker network.
+Seatplus ships with traefik as a reverse proxy server. If you wish to configure your own nginx or apache server you are
+on yourself. If you have already traefik in use you may need to alter the external docker network inside the `docker-compose.yml` file.
 {% /callout %}
 
 

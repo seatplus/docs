@@ -39,7 +39,7 @@ unzip main.zip
 
 ## Start Traefik
 {% callout type="warning" title="Assumptions" %}
-This guide assumes that no other webserver or reverse proxyx is used.
+This guide assumes that no other webserver or reverse proxy is used.
 If you have traefik already installed on your server or plan to use it, you might want to change the used docker-network.
 {% /callout %}
 
