@@ -64,7 +64,7 @@ If you have traefik already installed on your server or plan to use it, you migh
 ## Prepare your app
 We provided the base-app with a bootstrap shell script. Simply run it and enter the required information:
 ```shell
-cd .. && bash bootstraph.sh
+cd .. && bash bootstrap.sh
 ```
 
 Please refer to {% link href="configuration" %}Configuration{% /link %} in order to get more information of the available settings.
