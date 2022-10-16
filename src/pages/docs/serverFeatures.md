@@ -17,14 +17,6 @@ It is suggested to create schedules for the following tasks. Please not the advi
 
 {% figure src="/images/settings/schedules.png" alt="Schedules overview" /%}
 
-## SSO Setting
-
-This is the place where you can configure the SSO settings. Either search for an *Alliance* or a *Corporation* and select all the scopes that you require from a character within that alliance or corporation.
-Please note, that you can have varying for corporation within an alliance. The combination of required scopes will be enforced.
-
-{% figure src="/images/settings/scope_setting.png" alt="Scope Setting" /%}
-
-
 ## Onboarding Wizard
 
 {% callout type="note" title="Traefik" %}
