@@ -39,7 +39,7 @@ const navigation = [
     {
         title: 'Advanced features',
         links: [
-            { title: 'Settings', href: '/docs/settings' },
+            { title: 'Server Features', href: '/docs/serverFeatures' },
             { title: 'Corporation Features', href: '/docs/corporationFeatures' },
             { title: 'Character Features', href: '/docs/characterFeatures' },
         ]
