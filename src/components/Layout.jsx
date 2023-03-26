@@ -18,6 +18,7 @@ const navigation = [
       { title: 'Getting started', href: '/' },
       { title: 'Requirements', href: '/docs/requirements' },
       { title: 'Installation', href: '/docs/installation' },
+      { title: 'Upgrade', href: '/docs/upgrade' },
     ],
   },
     {
