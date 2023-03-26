@@ -42,7 +42,7 @@ git clone https://github.com/seatplus/base-app .
 We provided the base-app with a bootstrap shell script. It is designed for productive installations but you can use it for development as well.
 
 ```shell
-bash bootstraph.sh
+bash bootstrap.sh
 ```
 
 ## Configure your development environment file
