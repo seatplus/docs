@@ -56,5 +56,19 @@ EVE_CLIENT_SECRET=null
 EVE_CALLBACK_URL=https://seatplus.yourdomain.com/auth/eve/callback
 ```
 
+# Custom Logo / Favicon
+You can replace the default logo and favicon by adding your files in the
+`/src/public/img` folder. You may use any name you like. Just make sure not to 
+name them `seat_plus.svg` or `seat_plus_logo.svg` as these are reserved for the default
+and may be overwritten on updates.
 
+Following requirements apply:
+- Favicon: SVG Format, 1:1 Aspect Ratio, 52x52px
+- Logo: SVG Format, 220x52px
+
+add the following to your `.env` file:
+```dotenv
+LOGO_PATH=img/logo.svg
+ICON_PATH=img/icon.svg
+```
 
