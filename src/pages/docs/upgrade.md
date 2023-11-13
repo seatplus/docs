@@ -12,6 +12,50 @@ Usually the `/src` folder contains not much of value, except for the installed p
 After the upgrade you must install your packages again.
 {% /callout %}
 
+## Update to v4.x
+
+This is a major update. The underlying seatplus/web package has been updated to v4.0.0.
+
+(untested yet)
+
+On your host:
+
+### navigate to the /src directory:
+```shell
+cd /src
+```
+
+### edit composer.json to require the latest version of seatplus/web:
+```shell
+"require": {
+    "seatplus/web": "^4.0",
+    ...
+```
+
+### navigate back to the root directory:
+```shell
+cd ..
+```
+
+### update the app using docker
+```shell
+docker-compose exec composer update --no-dev
+```
+
+### restart your node to build new web assets:
+```shell
+docker-compose restart node
+```
+
+now seatplus should be up and running again.
+
+### (optionally) Enter Shell for package installation:
+```shell
+docker-compose exec bash
+```
+
+---
+
 ## Update to v3.x
 
 (untested yet)
