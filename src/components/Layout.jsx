@@ -49,6 +49,7 @@ const navigation = [
         title: 'Plugins',
         links: [
             { title: 'Ship Replacement Programm', href: '/docs/plugins/srp' },
+            { title: 'Connectors', href: '/docs/plugins/connectors' },
         ],
     },
   {
