@@ -37,7 +37,7 @@ cd ..
 ```
 ### update the app using docker
 ```shell
-docker-compose exec composer update --no-dev
+docker-compose exec php composer update --no-dev
 ```
 ### restart your node to build new web assets:
 ```shell
