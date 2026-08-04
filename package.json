@@ -1,12 +1,14 @@
 {
-  "name": "tailwindui-documentation",
+  "name": "seatplus-docs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check": "python3 scripts/check_docs.py",
+    "screenshots": "python3 scripts/import_screenshots.py"
   },
   "browserslist": ["defaults, not ie <= 11"],
   "dependencies": {

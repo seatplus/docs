@@ -1,73 +1,105 @@
 ---
 title: Ship Replacement Program
-description: A plugin that offers the ability for users to submit their loss mail.
+description: An optional plugin that lets members submit their loss mails and lets SRP officers review, price and pay them out.
 ---
 
-This plugin offers the ability for users to submit their loss mail and SRP Officers to handle payouts if loss is accepted.
+The Ship Replacement Program plugin lets members submit a loss mail for reimbursement, and lets SRP
+officers price the loss, accept or reject it, and record the payout. It is a separate package, not part
+of a default installation.
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/seatplus/srp.svg?style=flat-square)](https://packagist.org/packages/seatplus/srp)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/seatplus/srp/Laravel?label=Tests)](https://github.com/seatplus/srp/actions?query=workflow%3Alaravel+branch%3Adev)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/seatplus/srp/Check%20&%20fix%20styling?label=code%20style)](https://github.com/seatplus/srp/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Adev)
-[![Total Downloads](https://img.shields.io/packagist/dt/seatplus/srp.svg?style=flat-square)](https://packagist.org/packages/seatplus/srp)
+{% .lead %}
 
-For more information on the plugin please visit the [Github - seatplus/srp](https://github.com/seatplus/srp).
+The plugin is developed at [seatplus/srp](https://github.com/seatplus/srp), where you will also find
+its release notes and issue tracker.
+
+---
 
 ## Installation
 
+Install it inside the php container of your running instance. `composer require` adds the package to
+your `src/composer.json`; `composer install` would not.
 
-{% callout type="note" title="How to install the package" %}
-Please review the {% link href="admin#add-package" %}admin guide{% /link %} for information on how to add a package to seatplus
+```shell
+docker-compose exec php composer require seatplus/srp
+```
+
+Then run the migrations it ships:
+
+```shell
+docker-compose exec php php artisan migrate
+```
+
+Because the plugin adds new screens, restart the node container so its frontend assets are built:
+
+```shell
+docker-compose restart node
+```
+
+{% callout type="note" title="General package installation" %}
+[Administration tasks](/docs/admin#add-a-package) covers adding packages in more detail, including
+publishing assets and what to do when a package's UI does not appear.
 {% /callout %}
 
-1) Install the package
-    ```bash
-    composer install seatplus/srp
-    ```
+Finally, grant the permissions. The plugin adds its own, including `can submit srp requests` for
+members. Assign them through a control group as you would any other permission — see
+[Permissions and control groups](/docs/concepts/permissions).
 
-2) Run migrations
-    ```bash
-    php artisan migrate
-    ```
+---
 
-## Usage
+## Submitting a loss
 
-As a user with the necessary permission you can submit your loss mail. If you are not able to so please ask an administrator to assign you the `can submit srp requests` permission.
+Members need the `can submit srp requests` permission. Without it the submission form is unavailable
+and an administrator has to grant it.
 
-{% figure src="/images/plugins/srp/srp-overview.png" alt="SRP Overview" /%}
+{% figure src="/images/plugins/srp/srp-overview.png" alt="The SRP overview page listing a member's submitted requests and their statuses" caption="The member's SRP overview. Submitted requests and their current status are listed here." /%}
 
-You must paste the external URL (Character Sheet -> Interactions -> Combat Log -> Losses -> External URL) into the box. You may also add some additional information to the loss that may required by the SRP Officers.
+To submit a loss you need its **external URL**, which EVE generates for you: in the client, go to
+**Character Sheet → Interactions → Combat Log → Losses** and copy the external URL for the loss. Paste
+it into the form, and add any context your SRP officers expect — doctrine, fleet, fitting notes.
 
-{% figure src="/images/plugins/srp/submitted-killmail.png" alt="Killmail" /%}
+{% figure src="/images/plugins/srp/submitted-killmail.png" alt="A submitted killmail showing the itemised loss with per-module prices" caption="The itemised loss. Review the module prices before submitting — they come from ESI market data and will not match your expectations exactly." /%}
 
-Please review the prices for the modules. Seatplus is using prices from ingame/ESI so the prices may be slightly different. 
-Whenever you are ready submit your request. 
-You will see the status of your request in the table on the overview page.
+{% callout type="note" title="Prices are ESI market prices, not your replacement value" %}
+The plugin values modules from in-game market data, so the total is an estimate rather than a policy
+figure. Officers can adjust both individual item prices and the total during review, which is where
+your alliance's actual SRP policy gets applied.
+{% /callout %}
 
-## SRP Officers
+Once submitted, track the status on the overview page.
 
-As a SRP Officer you can handle the payouts for the SRP requests.
+---
 
-{% figure src="/images/plugins/srp/srp-admin-overview.png" alt="SRP Admin Overview" /%}
+## For SRP officers
 
-### Review
-As SRP officer you may:
-* modify item prices (this will update the total)
-* modify the total ISK amount.
-* write a note to the user who submitted the request or for reviewers.
-* accept or reject the SRP requests.
+Officers get a queue of submitted requests.
 
-{% figure src="/images/plugins/srp/review-killmail.png" alt="Review Killmail" /%}
+{% figure src="/images/plugins/srp/srp-admin-overview.png" alt="The SRP officer overview listing all submitted requests awaiting review" caption="The officer view: every submitted request across the instance." /%}
+
+### Reviewing a request
+
+Opening a request lets you:
+
+- adjust individual item prices, which updates the total;
+- override the total ISK amount outright;
+- write a note, either to the submitter or for other reviewers;
+- accept or reject the request.
+
+{% figure src="/images/plugins/srp/review-killmail.png" alt="The review screen for a killmail with editable item prices and accept and reject actions" caption="Reviewing a loss. Both per-item prices and the total are editable, so alliance policy can override market value." /%}
 
 ### Payouts
 
-Processed and accepted srp requests are collected by user. 
-{% figure src="/images/plugins/srp/srp-payout.png" alt="Payout overview" /%}
+Accepted requests are grouped **by user**, so you pay a person once rather than paying each loss
+separately.
 
-if you opt to process all open payouts you will have the option to copy a receipt to the clipboard. Which you then can send to the user.
-The receiver will see the following:
-{% figure src="/images/plugins/srp/receipt.png" alt="Payout receipt" /%}
+{% figure src="/images/plugins/srp/srp-payout.png" alt="The payout overview grouping accepted requests by user" caption="Payouts, grouped per user. Processing them together is what makes the receipt useful." /%}
+
+When you process a user's open payouts you can copy a **receipt** to the clipboard and send it to them
+in game, so they can see exactly what was reimbursed and for which losses.
+
+{% figure src="/images/plugins/srp/receipt.png" alt="A payout receipt as the receiving member sees it" caption="The receipt the member receives, itemising what was paid and for what." /%}
 
 ### History
-There is also a list with the all the payouts made.
-{% figure src="/images/plugins/srp/list-of-receipts.png" alt="List of receipts" /%}
 
+Every payout that has been made is listed, so past decisions and amounts stay auditable.
+
+{% figure src="/images/plugins/srp/list-of-receipts.png" alt="The history list of all payouts made" caption="Payout history. Useful both for auditing and for answering “was I ever paid for this”." /%}

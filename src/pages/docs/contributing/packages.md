@@ -1,6 +1,6 @@
 ---
-title: Packages
-description: Seatplus uses packages for core and for plugins. Learn how to set packages up in your development environment.
+title: Package development
+description: Seatplus is assembled from Composer packages; this is how to link a local checkout of one into your development instance.
 ---
 
 After you have installed the development environment this is how your folder structure should look like:

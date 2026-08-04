@@ -1,60 +1,88 @@
 ---
 title: Getting started
-pageTitle: Seatplus - SeAT with a little plus.
-description: Flexible EVE Online API with the intent of corporation management and recruitment.
+pageTitle: Seatplus — SeAT with a little plus.
+description: Corporation management and recruitment for EVE Online, built around a permission model that fits how alliances actually work.
 ---
 
-Learn how to set up Seatplus in under thirty minutes.  {% .lead %}
+Seatplus is a self-hosted corporation-management tool for EVE Online: it keeps a copy of your members'
+ESI data, decides who may see what, and runs your recruitment pipeline.  {% .lead %}
 
 {% quick-links %}
 
-{% quick-link title="Installation" icon="installation" href="/docs/installation" description="Step-by-step guides to setting up your system and installing Seatplus." /%}
+{% quick-link title="Install it" icon="installation" href="/docs/requirements" description="Hardware and software requirements, then a step-by-step Docker install." /%}
 
-{% quick-link title="Features" icon="presets" href="/docs/ssoScopes" description="Learn what Seatplus offers to you and how it works." /%}
+{% quick-link title="First run" icon="lightbulb" href="/docs/first-run" description="The five steps a fresh instance needs before it does anything useful." /%}
 
-{% quick-link title="Plugins" icon="plugins" href="/docs/plugins/srp" description="Extend the application with third-party plugins or write your own." /%}
+{% quick-link title="Recruitment" icon="presets" href="/docs/recruitment/overview" description="Job postings, staged review, and how applications reach the right recruiters." /%}
 
-{% quick-link title="Contribution" icon="theming" href="/docs/how-to-contribute" description="Learn to easily customize and modify your app's visual design to fit your brand." /%}
+{% quick-link title="Contribute" icon="theming" href="/docs/contributing/how-to-contribute" description="Set up a development environment and help build Seatplus." /%}
 
 {% /quick-links %}
-
-Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.
 
 ---
 
 ## Introduction
 
-Inspired by [SeAT](https://github.com/eveseat/seat), seatplus is a complete rewrite based on the most frequent user- and 
-feature request. As such the complete role and affiliation concept has been designed from the drawing board aiming to support recruiters in their daily work for their corporation. 
-No more SDE Issues, seat-plus does not have any dependency of SDE. 
-Have Friends on your instance, only request esi-scopes when necessary. 
-Have an overview of members compliance if scopes or refresh_tokens has been changed. 
-No delays between role assignment and users capabilities. 
-Allow recruiters to only review recruits without access to in-corp characters. 
-Automatically assign roles to users based upon their corporation or alliance.
+Inspired by [SeAT](https://github.com/eveseat/seat), Seatplus is a complete rewrite driven by the
+feature requests SeAT received most often. The role and affiliation model was designed from scratch
+around the work recruiters and HR teams actually do, rather than bolted on afterwards.
 
-Currently, seat-plus is under development and required your feedback.
-What do you like? What feature would you like to see? Any feedback is of
-value.
+What that buys you in practice:
 
-| Channel                                        | Purpose                       |
-|:-----------------------------------------------|:------------------------------|
-| [GitHub](https://github.com/seatplus/seatplus) | Bug-Reports, Feature Requests |
-| [Discord](https://discord.gg/3UR5uDDMjK)       | Social, Support               |
+- **No static data export to maintain.** Seatplus resolves item and location data on demand as it
+  encounters it, so a working instance needs no SDE import. An importer exists if you want to
+  pre-populate that reference data in bulk, but nothing depends on you running it.
+- **Only the scopes you need.** ESI scope requirements are configured per corporation, per alliance or
+  globally, and can be scoped to whole accounts — so guests on your instance are not forced to hand
+  over everything.
+- **Compliance you can see.** When a member's scopes or refresh token change, it shows up in
+  [Employment observation](/docs/personnel/observation) instead of silently producing empty pages.
+- **Recruiters scoped to recruits.** A recruiter's access is granted by the application rather than by
+  membership of your corporation, so you can let someone review candidates without handing them your
+  members' data.
+- **Membership that maintains itself.** An automatic control group adds and removes members as they
+  join and leave your corporation or alliance in game, once its reconciliation job is scheduled.
 
-## Modern Design
+Seatplus is under active development, and feedback shapes it.
 
-Seatplus is designed mobile first. Whenever or wherever you access seat-plus you will have a great user experience.
+| Channel | Purpose |
+|:--- |:--- |
+| [GitHub](https://github.com/seatplus/seatplus) | Bug reports, feature requests |
+| [Discord](https://discord.gg/3UR5uDDMjK) | Social, support |
 
-## Robust Architecture
+## Where to start
 
-Seatplus is currently under development and used within [Amok.](https://zkillboard.com/corporation/1184675423/) alongside other tools for member life cycle management.
-Functionalities of seatplus are tested in order to guarantee functionality. Auth Coverage aims for above  85% and eveapi coverage above 80%.
-Noteable components are:
-* [Seatplus/eveapi](https://github.com/seatplus/eveapi) - The main library for the application.
-* [Seatplus/esi-client](https://github.com/seatplus/esi-client) - A standalone ESI (Eve Swagger Interface) Client Library using kevinrob/guzzle-cache-middleware.
+If you are **installing it**, read [Requirements](/docs/requirements), then
+[Installation](/docs/installation), then [First run](/docs/first-run) — in that order. First run is
+the one that matters: a fresh instance fetches nothing from EVE and grants nobody any access until you
+configure it.
 
-{% callout type="note" title="One does not simply need the web interface" %}
-If you wish to solely use the esi-client or the eveapi to interact with the ESI, you can do so. You mustn't use the web interface. 
-You might even opt to write your own web interface. If you do so, you might want to have a look at [Seatplus/auth](https://github.com/seatplus/auth) to take advantage of the authentication features.
+If someone has **already set it up for you** and you want to understand what you are looking at, start
+with [Characters and accounts](/docs/concepts/characters-and-accounts) and
+[ESI scopes and compliance](/docs/concepts/sso-scopes). Those two explain most of what appears
+confusing at first, including why a page can be empty.
+
+If you are **running recruitment**, go straight to
+[Recruitment overview](/docs/recruitment/overview).
+
+## Architecture
+
+Seatplus is a set of Laravel packages assembled by a core application, which is what you install. It is
+built mobile-first, so the interface works on a phone as well as a desktop, and it is used in
+production by [Amok.](https://zkillboard.com/corporation/1184675423/) for member life-cycle
+management.
+
+The packages worth knowing about:
+
+- [seatplus/eveapi](https://github.com/seatplus/eveapi) — the data layer: models, ESI jobs and scopes.
+- [seatplus/auth](https://github.com/seatplus/auth) — authentication, permissions, control groups and
+  affiliations.
+- [seatplus/web](https://github.com/seatplus/web) — the web interface.
+- [seatplus/esi-client](https://github.com/seatplus/esi-client) — a standalone ESI client library
+  using `kevinrob/guzzle-cache-middleware`.
+
+{% callout type="note" title="You do not have to use the web interface" %}
+If you only want to talk to ESI from your own code, use `seatplus/esi-client` or `seatplus/eveapi`
+directly — neither requires the web interface. If you would rather write your own front end,
+`seatplus/auth` gives you the authentication, permission and affiliation model for free.
 {% /callout %}

@@ -11,6 +11,10 @@ import { ThemeSelector } from '@/components/ThemeSelector'
 import seatplus from '@/images/seat_plus_logo.svg'
 import Image from "next/image";
 
+// The sidebar. Every page under src/pages must appear here exactly once, with an href equal to
+// its file path (minus `src/pages` and `.md`) — the href drives the active highlight, the
+// prev/next footer and the section eyebrow above each <h1>. A page missing from this array still
+// resolves as a URL but renders with no eyebrow, no highlight and no prev/next: a dead end.
 const navigation = [
   {
     title: 'Introduction',
@@ -18,46 +22,73 @@ const navigation = [
       { title: 'Getting started', href: '/' },
       { title: 'Requirements', href: '/docs/requirements' },
       { title: 'Installation', href: '/docs/installation' },
+      { title: 'First run', href: '/docs/first-run' },
+    ],
+  },
+  {
+    title: 'Concepts',
+    links: [
+      { title: 'Characters and accounts', href: '/docs/concepts/characters-and-accounts' },
+      { title: 'ESI scopes and compliance', href: '/docs/concepts/sso-scopes' },
+      { title: 'Permissions and control groups', href: '/docs/concepts/permissions' },
+    ],
+  },
+  {
+    title: 'Recruitment',
+    links: [
+      { title: 'Overview', href: '/docs/recruitment/overview' },
+      { title: 'Job postings and review stages', href: '/docs/recruitment/job-postings' },
+      { title: 'Applying to a corporation', href: '/docs/recruitment/applying' },
+      { title: 'Reviewing applications', href: '/docs/recruitment/reviewing' },
+    ],
+  },
+  {
+    title: 'Personnel',
+    links: [
+      { title: 'Member tracking', href: '/docs/personnel/member-tracking' },
+      { title: 'Employment observation', href: '/docs/personnel/observation' },
+    ],
+  },
+  {
+    title: 'Character data',
+    links: [
+      { title: 'Assets', href: '/docs/character/assets' },
+      { title: 'Contacts', href: '/docs/character/contacts' },
+      { title: 'Contracts', href: '/docs/character/contracts' },
+      { title: 'Mails', href: '/docs/character/mails' },
+      { title: 'Skills', href: '/docs/character/skills' },
+      { title: 'Wallet', href: '/docs/character/wallet' },
+    ],
+  },
+  {
+    title: 'Corporation data',
+    links: [
+      { title: 'Corporation wallet', href: '/docs/corporation/wallet' },
+      { title: 'Manual locations', href: '/docs/corporation/manual-locations' },
+    ],
+  },
+  {
+    title: 'Administration',
+    links: [
+      { title: 'Configuration', href: '/docs/configuration' },
+      { title: 'Server settings', href: '/docs/server-settings' },
+      { title: 'Updating data from ESI', href: '/docs/updating-data' },
+      { title: 'Administration tasks', href: '/docs/admin' },
       { title: 'Update', href: '/docs/update' },
       { title: 'Upgrade', href: '/docs/upgrade' },
     ],
   },
-    {
-        title: 'Configuration and administration',
-        links: [
-            { title: 'Configuration', href: '/docs/configuration' },
-            { title: 'Administration', href: '/docs/admin' },
-        ]
-    },
   {
-    title: 'Core features',
-    links: [
-      { title: 'SSO Scopes', href: '/docs/ssoScopes' },
-      { title: 'Recruitment', href: '/docs/recruitment'},
-      { title: 'Corporation Member Compliance', href: '/docs/memberCompliance'},
-      { title: 'Control Groups', href: '/docs/controlGroup'},
-    ],
+    title: 'Plugins',
+    links: [{ title: 'Ship Replacement Program', href: '/docs/plugins/srp' }],
   },
-    {
-        title: 'Advanced features',
-        links: [
-            { title: 'Server Features', href: '/docs/serverFeatures' },
-            { title: 'Corporation Features', href: '/docs/corporationFeatures' },
-            { title: 'Character Features', href: '/docs/characterFeatures' },
-        ]
-    },
-    {
-        title: 'Plugins',
-        links: [
-            { title: 'Ship Replacement Programm', href: '/docs/plugins/srp' },
-        ],
-    },
   {
     title: 'Contributing',
     links: [
       { title: 'How to contribute', href: '/docs/contributing/how-to-contribute' },
-      { title: 'Dev Environment', href: '/docs/contributing/installation' },
-      { title: 'Package Development', href: '/docs/contributing/packages' },
+      { title: 'Dev environment', href: '/docs/contributing/installation' },
+      { title: 'Package development', href: '/docs/contributing/packages' },
+      { title: 'Writing docs', href: '/docs/contributing/writing-docs' },
     ],
   },
 ]
