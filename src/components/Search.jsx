@@ -10,6 +10,13 @@ const docSearchConfig = {
   indexName: process.env.NEXT_PUBLIC_DOCSEARCH_INDEX_NAME,
 }
 
+// DocSearch is optional. Without credentials `DocSearchModal` throws as soon as it is opened, so
+// render nothing at all rather than a button that crashes the page — a local checkout with no
+// .env.local is the normal case for anyone editing the docs.
+const isSearchConfigured = Boolean(
+  docSearchConfig.appId && docSearchConfig.apiKey && docSearchConfig.indexName
+)
+
 function Hit({ hit, children }) {
   return <Link href={hit.url}>{children}</Link>
 }
@@ -41,6 +48,10 @@ export function Search() {
       /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform) ? '⌘' : 'Ctrl '
     )
   }, [])
+
+  if (!isSearchConfigured) {
+    return null
+  }
 
   return (
     <>

@@ -1,67 +1,104 @@
 ---
-title: Hard- & Software Requirements
-description: 2 CPU, 2 GB RAM, 8-10 GB and docker-compose this what you need to start with seatplus.
+title: Requirements
+description: What you need before installing Seatplus — a Docker host, a public hostname, and enough CPU, memory and disk for the number of characters you track.
 ---
 
+Seatplus is distributed only as a Docker installation. That keeps every instance on the same environment
+as the developers run, which is what makes support possible for a project this size.
 
-As seatplus is a one-man project it will only be available as
-docker-based installation. This ensures that users of seat-plus have the
-same environment as the developers and allows for better support in any
-case.
+{% .lead %}
 
 {% callout type="note" title="Traefik" %}
-Seatplus ships with traefik as a reverse proxy server. If you wish to configure your own nginx or apache server you are
-on yourself. If you have already traefik in use you may need to alter the external docker network inside the `docker-compose.yml` file.
+Seatplus ships with Traefik as its reverse proxy and orders TLS certificates for you. If you want to put
+your own nginx or Apache in front of it instead, you are on your own. If you already run Traefik, you
+will need to point the app at your existing external Docker network in `docker-compose.yml`.
 {% /callout %}
 
+---
 
-## Hardware Requirements
+## Hardware
 
-| Type                    | up to 25 characters                             | Up to 500 Characters     |
-|:------------------------|:------------------------------------------------|:-------------------------|
-| CPU                     | 2 core                                          | 2 core                   |
-| Memory                  | 2 GB of RAM (incl. swap)                        | 4 GB of RAM (incl. swap) |
-| Local Space             | 8-10 GB                                         | 15-20 GB                 |
+The figures below are a starting point, not a hard limit. The left column is a small corporation
+running Seatplus for its own members; the right column is an alliance-sized instance tracking several
+hundred characters.
 
-{% callout type="warning" title="Disk space" %}
-Disk space requirements tend to grow the more character and the more history is persisted
+| Type        | Up to 25 characters      | Up to 500 characters     |
+| :---------- | :----------------------- | :----------------------- |
+| CPU         | 2 cores                  | 2 cores                  |
+| Memory      | 2 GB of RAM (incl. swap) | 4 GB of RAM (incl. swap) |
+| Local space | 8-10 GB                  | 15-20 GB                 |
+
+Memory and CPU are mostly consumed by the queue workers that fetch data from ESI, so they scale with
+how many characters you update and how often. Disk grows with the number of tracked characters and
+with how much history you keep — assets, wallet journals and mails are all stored per character and
+accumulate over time. Plan for the database to keep growing rather than to settle at a size.
+
+{% callout type="warning" title="Watch your disk" %}
+Running out of disk is the most common way a Seatplus instance breaks. Monitor free space on the volume
+holding your Docker data, and size it for where you expect to be in a year.
 {% /callout %}
 
-## Software Requirements
+---
 
-| Type           | Requirement   |
-|:---------------|:--------------|
-| Docker         | ^ 20.10       |
-| Docker Compose | ^ 1.29, ^2.10 |
-| Git            | ^ 2.25        |
+## Software
 
-{% callout type="note" title="Docker compose version" %}
-Docker Compose v2 brings Compose functionality into Docker itself. You’ll be able to use Compose wherever the latest Docker CLI is installed, no extra steps required. Underneath, Docker continues to use the features provided by the Compose project.
+| Type           | Requirement            |
+| :------------- | :--------------------- |
+| Docker Engine  | 24.0 or newer          |
+| Docker Compose | v2 (any current release) |
+| Git            | 2.25 or newer          |
 
-Existing docker-compose commands should map directly to their new docker compose counterparts. In most cases, you can drop the dash with no further changes required.
+{% callout type="note" title="Compose v2 and the missing dash" %}
+Compose v1 (the standalone `docker-compose` Python tool) reached end of life and has been removed from
+Docker. The current tool is Compose v2, which is a Docker CLI plugin invoked as `docker compose` with a
+space.
 
-This documentation will use the old docker-compose commands. If you are using docker-compose v2 you may drop the dash.
+Many installations still provide `docker-compose` as an alias for the v2 plugin, and the commands map
+one to one. This documentation writes `docker-compose` throughout; if your host only has the plugin,
+drop the dash and everything else stays the same.
 {% /callout %}
 
-### Installation of Docker & Docker Compose
+---
 
-1) Please follow the [official instructions](https://docs.docker.com/engine/install/) for installing docker on your system.
-2) Please follow the [official instructions](https://docs.docker.com/compose/install/) for installing docker-compose on your system.
+## Network
 
-{% callout type="note" title="Convinience Scripts" %}
-Alltough Docker does not reccomend to use the convenience scripts, we do. If you are using an ubuntu based system you may use the following script to install docker && docker compose in one go.
+The installation orders TLS certificates through Traefik, which means the certificate authority has to
+be able to reach your server before you start. Have all of the following in place first:
+
+- A hostname you control, for example `seatplus.yourdomain.com`.
+- A DNS record for that hostname pointing at your server's public IP address, already propagated.
+- Ports **80** and **443** reachable from the internet — open in your firewall and, if you are behind
+  a router, forwarded to the host.
+- An email address for the certificate authority. The Traefik bootstrap script asks for it.
+
+If the hostname does not resolve or the ports are blocked, the certificate request fails and your
+instance will not be reachable over HTTPS.
+
+---
+
+## Installing Docker and Git
+
+1. Follow the [official Docker Engine instructions](https://docs.docker.com/engine/install/) for your
+   distribution. The Docker Engine packages include the Compose v2 plugin.
+2. If you need Compose separately, follow the
+   [official Compose instructions](https://docs.docker.com/compose/install/).
+
+{% callout type="note" title="Convenience script" %}
+Docker does not recommend the convenience script for production hosts, but it installs Engine and the
+Compose plugin in one step and we use it. On a Debian or Ubuntu based system:
 
 ```shell
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 ```
+
 {% /callout %}
 
-### Installation of git
-
-You may need to install it
+Git is usually already present. If it is not:
 
 ```shell
 sudo apt-get install git
 ```
 
+Once all of this is in place, continue with
+{% link href="/docs/installation" %}Installation{% /link %}.

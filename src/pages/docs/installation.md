@@ -1,110 +1,165 @@
 ---
 title: Installation
-description: Learn how to install Seatplus.
+description: Install Seatplus from the base-app repository with Docker Compose, from cloning the repository to running the first migration.
 ---
 
-This section explains how to install Seatplus.
+This page takes you from an empty Docker host to a running Seatplus instance. Work through the steps in
+order — each one depends on the one before it.
+
+{% .lead %}
+
+---
 
 ## Preflight checks
 
-Before you start the installation process, please make sure that you have the following requirements met:
+Before you start, confirm the tooling is present.
 
-* Docker and Docker Compose installed
-```shell
-$ docker -v
-Docker version 20.10.18, build b40c2f6
-$ docker-compose -v
-docker-compose version 1.29.2, build 5becea4c
-```
-* git
-```shell
-$ git --version
-git version 2.25.1
-```
-If you miss any of these requirements, please review the {% link href="requirements" %}requirements{% /link %} section where you can find instructions on how to install them.
+- Docker and Docker Compose
 
+  ```shell
+  $ docker -v
+  Docker version 24.0.6
+  $ docker-compose -v
+  Docker Compose version v2.21.0
+  ```
+
+- Git
+
+  ```shell
+  $ git --version
+  git version 2.25.1
+  ```
+
+If anything is missing, or if you have not yet pointed a hostname at this server, go back to
+{% link href="/docs/requirements" %}Requirements{% /link %}. The install orders TLS certificates, so
+DNS and ports 80/443 need to be in place before you begin.
+
+---
 
 ## Download base-app
-You have several options to download the base app which you need to start Seatplus. Whereas git is probably the best
-as it will allow you to update the base-app more easily.
 
-Optionally create and navigate into your Seatplus directory where the app is going to be installed in
+Everything you need to run Seatplus lives in the `base-app` repository. Cloning it with Git is the option
+we recommend, because it is also how you pick up changes to the Compose files later.
+
+Create and enter the directory the app will live in:
 
 ```shell
 mkdir /opt/seatplus && cd /opt/seatplus
 ```
 
-clone the base-app into the seatplus folder:
+Clone base-app into it:
+
 ```shell
 git clone https://github.com/seatplus/base-app .
 ```
 
+Every command on this page and in the rest of the administration documentation is run from this
+directory.
+
+---
+
 ## Start Traefik
+
 {% callout type="warning" title="Assumptions" %}
-This guide assumes that no other webserver or reverse proxy is used.
-If you have traefik already installed on your server or plan to use it, you might want to change the used docker-network.
+This guide assumes no other web server or reverse proxy is running on the host. If you already use
+Traefik, or plan to, you will want to change the Docker network the app attaches to.
 {% /callout %}
 
-1) create the external docker network
+1. Create the external Docker network:
 
-    ```shell
-    docker network create traefik
-    ```
+   ```shell
+   docker network create traefik
+   ```
 
-2) in order to order SSL certificates for using https you must provide your email.
-    Run the bootstrap script within the traefik folder and provide your email address
-    ```shell
-    cd traefik && bash bootstrap.sh
-    ```
-3) start traefik from within the traefik folder
-    ```shell
-    docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-    ```
+2. Traefik needs your email address to order TLS certificates. Run the bootstrap script inside the
+   `traefik` directory and enter it:
+
+   ```shell
+   cd traefik && bash bootstrap.sh
+   ```
+
+3. Start Traefik from the same directory:
+
+   ```shell
+   docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+   ```
+
+---
 
 ## Prepare your app
-We provided the base-app with a bootstrap shell script. Simply run it and enter the required information:
+
+base-app ships a second bootstrap script, in the repository root, which creates your `.env` file from
+`.env.example`. Run it and answer its questions:
+
 ```shell
 cd .. && bash bootstrap.sh
 ```
 
-Please refer to {% link href="configuration" %}Configuration{% /link %} in order to get more information of the available settings.
+The script refuses to run if a `.env` already exists, so it is safe to check before you start. It
+generates a database password for you and asks you for the public URL of your instance and for the
+`Client ID` and `Secret Key` of your EVE Online application. It writes those answers into `.env` and
+sets the matching hostname in `docker-compose.prod.yml`.
 
-### Prepare source files
+If you do not have EVE application credentials yet, register the application first — the steps and
+every other variable you can set are covered in
+{% link href="/docs/configuration" %}Configuration{% /link %}. You can also edit `.env` by hand
+afterwards; nothing the script writes is final.
 
-Seatplus requires the `/src` directory to be present. This directory contains the source code of the app.
-Run the following command to create the application in the `/src` directory:
+---
+
+## Prepare source files
+
+Seatplus needs a `src` directory in the repository root holding the application's source code. Create it
+with Composer inside the `php` container:
 
 ```shell
 docker-compose run --rm php composer create-project seatplus/core . --prefer-dist --no-dev --no-ansi
 ```
 
-Since files are owned by root, you need to change the ownership of the files. Traditionally, you would do this for www-data, 
-but since we are using a docker container, we use an arbitary user 1000 in usergroup 1000. If your setup has already a www-data user,
-you might change the PUID and PGID inside the `.env` to match your setup. For all other users the command below will suffice.
+Composer runs as root in the container, so the resulting files are owned by root and the application
+cannot write to them. Hand them to the user the containers run as:
 
 ```shell
 chown -R 1000:1000 src
 ```
 
-### Start the App
-to start the app simply run
+{% callout type="note" title="Match the ownership to your PUID and PGID" %}
+`1000:1000` is correct for the default `PUID` and `PGID` in `.env`. If you changed either of them — for
+example to line up with an existing `www-data` user — chown to those values instead. Ownership that
+does not match `PUID`/`PGID` shows up as permission errors from the application, not as an install
+failure. See {% link href="/docs/configuration" %}Configuration{% /link %}.
+{% /callout %}
+
+---
+
+## Start the app
+
 ```shell
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```
 
-### Run the database migrations
+---
+
+## Run the database migrations
+
+The database starts empty. Build the schema:
+
 ```shell
 docker-compose exec php php artisan migrate
 ```
 
-now seatplus is ready to use.
+---
 
-### Assign superuser
-After you have created your first user, you need to assign the superuser role to it. Learn how to do this in the  {% link href="admin#create-superuser" %}Admin{% /link %} section.
+## Next: first run
 
-{% callout type="note" title="Administration" %}
-Please refer to {% link href="admin" %}Admin{% /link %} for further information and guides of administrating your Seatplus install.
-Topics may be: Superuser, Backup, Restore, Plugin Installation etc.
+The containers are now running, and your instance is reachable — but it does nothing yet. A freshly
+installed Seatplus has no administrator, requires no ESI scopes and has no schedules, which means it
+fetches nothing from EVE and grants nobody access until you configure it.
+
+Continue with {% link href="/docs/first-run" %}First run{% /link %}, which covers signing in, claiming
+the `superuser` permission, creating the schedules and deciding which scopes you require.
+
+{% callout type="note" title="Day-to-day administration" %}
+Once you are up and running, {% link href="/docs/admin" %}Administration tasks{% /link %} covers
+backups, restores, adding packages and reading logs.
 {% /callout %}
-
-
