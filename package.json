@@ -11,6 +11,9 @@
     "screenshots": "python3 scripts/import_screenshots.py"
   },
   "browserslist": ["defaults, not ie <= 11"],
+  "engines": {
+    "node": "24.x"
+  },
   "dependencies": {
     "@docsearch/react": "^3.1.0",
     "@headlessui/react": "^1.6.5",
